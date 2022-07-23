@@ -32,7 +32,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserId = exports.getAllUser = void 0;
+exports.updateUser = exports.deleteUser = exports.getUserId = exports.getAllUser = void 0;
 const userServices = __importStar(require("../services/User.services"));
 const getAllUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -71,3 +71,42 @@ const getUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUserId = getUserId;
+const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const removeUs = yield userServices.deleteUs(String(id));
+        if (removeUs) {
+            res.status(200).json("User has been deleted.");
+        }
+        else {
+            res.status(400).json("You can delete only your account.");
+        }
+    }
+    catch (error) {
+        res.status(500).send({
+            status: false,
+            message: error.message,
+        });
+    }
+});
+exports.deleteUser = deleteUser;
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const id = req.params.id;
+        const data = req.body;
+        const update = yield userServices.updateUs(String(id), data);
+        if (update) {
+            res.status(200).send({ status: "success", data: update });
+        }
+        else {
+            res.status(400).send({ status: "failed" });
+        }
+    }
+    catch (error) {
+        res.status(500).send({
+            status: false,
+            message: error.message
+        });
+    }
+});
+exports.updateUser = updateUser;
